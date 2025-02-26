@@ -59,7 +59,7 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
 };
 
 const findEvents = async () => {
-  const response = await fetch('/events?populate[0]=talks.speakers&populate[1]=images', 'GET', {}, {
+  const response = await fetch('/events?populate[0]=talks.speakers&populate[1]=images&populate[2]=talks.speakers.avatar', 'GET', {}, {
   });
 
   return response.data;
