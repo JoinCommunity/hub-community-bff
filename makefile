@@ -2,11 +2,11 @@ start:
 	yarn clean
 	yarn
 	yarn build
-	pm2 start yarn --name conversa-de-garagem-bff -- run start
+	pm2 start yarn --name hub-community-bff -- run start
 
 update:
 	git pull
 	yarn clean
 	yarn
 	yarn build
-	pm2 restart conversa-de-garagem-bff
+	pm2 restart hub-community-bff
