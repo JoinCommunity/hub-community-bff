@@ -1,0 +1,8 @@
+scalar JSON
+
+type Speaker {
+  name: String
+  biography: JSON
+  highlight: Boolean
+  avatar: String
+}

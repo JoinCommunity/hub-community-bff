@@ -6,4 +6,5 @@ type Talk {
   occur_date: String
   room_description: String
   highlight: Boolean
+  speakers: [Speaker]
 }
