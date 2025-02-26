@@ -1,10 +1,17 @@
+import dotenv from 'dotenv';
 import pubsub from '../../dataSources/pubsub';
 
-const Event = {
-  Query: {
-    findEvents: async (_, { identifier, password }, { dataSources }) => {
-      console.log('dataSources: ', dataSources);
+dotenv.config();
 
+const Event = {
+  Event: {
+    images: ({ images }) => images.map(
+      (image) => `${process.env.MANAGER_URL}${image.formats.large.url}`,
+    ),
+  },
+
+  Query: {
+    findEvents: async (_, __, { dataSources }) => {
       try {
         const response = await dataSources.manager.findEvents();
 
@@ -16,7 +23,7 @@ const Event = {
   },
 
   Mutation: {
-    submitEventComment: async (_, parent, context) => ({
+    submitEventComment: async (_, __, ___) => ({
       comment: 'comment',
     }),
   },

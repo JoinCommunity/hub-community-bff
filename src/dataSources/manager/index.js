@@ -8,41 +8,6 @@ dotenv.config();
 
 /**
  *
- * @deprecated use method fetch instead of
- */
-const request = async (route, method, customHeaders = {}, body = null) => {
-  let response;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    ...customHeaders,
-  };
-
-  const url = `${process.env.MANAGER_URL}${route}`;
-
-  try {
-    response = await axios({
-      method,
-      url,
-      headers,
-      data: body,
-    });
-  } catch (error) {
-    throw new Error(`Error on try ${method} in ${url}`);
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    console.info(`[${method}] ${route}`);
-  }
-
-  if (response.data.data) {
-    return graphqlUtils(response.data.data, response.data.meta);
-  }
-  return graphqlUtils(response.data);
-};
-
-/**
- *
  * @param {*} route route in backend
  * @param {*} method GET, POST, PUT, DELETE
  * @param {*} customHeaders map of headers {}
@@ -57,7 +22,7 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
     ...customHeaders,
   };
 
-  const url = `${process.env.MANAGER_URL}${route}`;
+  const url = `${process.env.MANAGER_URL}/api${route}`;
 
   try {
     response = await axios({
@@ -94,7 +59,7 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
 };
 
 const findEvents = async () => {
-  const response = await fetch('/events', 'GET', {}, {
+  const response = await fetch('/events?populate[0]=talks.speakers&populate[1]=images', 'GET', {}, {
   });
 
   return response.data;

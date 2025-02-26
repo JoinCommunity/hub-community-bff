@@ -1,0 +1,9 @@
+scalar JSON
+
+type Talk {
+  title: String
+  description: JSON
+  occur_date: String
+  room_description: String
+  highlight: Boolean
+}
