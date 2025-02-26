@@ -1,0 +1,7 @@
+{
+    "place": {
+        "open_bar": "Open the pub",
+        "just_on_in_bar": "1 visitor",
+        "many_on_in_bar": "{count} visitors"
+    }
+}

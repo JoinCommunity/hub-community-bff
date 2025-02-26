@@ -1,0 +1,7 @@
+{
+    "place": {
+        "open_bar": "Abrir esse boteco",
+        "just_on_in_bar": "1 pessoa",
+        "many_on_in_bar": "{count} pessoas"
+    }
+}
