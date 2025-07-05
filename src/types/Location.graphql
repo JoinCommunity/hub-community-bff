@@ -1,0 +1,19 @@
+
+
+type Location {
+  id: String
+  latitude: Int
+  longitude: Int
+  created_at: String
+  updated_at: String
+
+  title: String
+  google_maps_url: String
+
+  events: [Event]
+  full_address: String
+  city: String
+  region: String
+
+  communities: [Community]
+}

@@ -1,8 +1,10 @@
 scalar JSON
 
 type Speaker {
+  id: String
   name: String
   biography: JSON
   highlight: Boolean
   avatar: String
+  talks: [Talk]
 }

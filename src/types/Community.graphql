@@ -1,0 +1,19 @@
+scalar JSON
+
+type Community {
+  id: String
+  title: String
+  short_description: String
+  full_description: JSON
+  images: [String]
+  created_at: String
+  updated_at: String
+
+  events: [Event]
+  tags: [Tag]
+  locations: [Location]
+  founded_in: String
+  links: [Link]
+  members_quantity: Int
+  organizers: [User]
+}

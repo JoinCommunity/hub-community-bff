@@ -7,4 +7,5 @@ type Talk {
   room_description: String
   highlight: Boolean
   speakers: [Speaker]
+  event: Event
 }
