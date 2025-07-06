@@ -34,7 +34,7 @@ const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', popul
     if (filters[key] && typeof filters[key] === 'object') {
       Object.keys(filters[key]).forEach((op) => {
         if (filters[key][op] !== undefined) {
-          params.append(`filters[${key}][${op}]`, filters[key][op]);
+          params.append(`filters[${key}][$${op}]`, filters[key][op]);
         }
       });
     }
@@ -83,6 +83,8 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
   };
 
   const url = `${process.env.MANAGER_URL}/api${route}`;
+
+  console.log(`[${method}] - ${decodeURIComponent(url)}`);
 
   try {
     response = await axios({
