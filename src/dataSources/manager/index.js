@@ -145,7 +145,7 @@ const findCommunities = async (filters = {}, sort = [], pagination = {}, search 
   const populate = [
     'events',
     'tags',
-    'locations',
+    'location',
     'organizers',
     'images'
   ];
@@ -160,7 +160,7 @@ const findCommunityById = async (id) => {
   const populate = [
     'events',
     'tags',
-    'locations',
+    'location',
     'organizers',
     'images'
   ];

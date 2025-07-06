@@ -66,6 +66,12 @@ query GetCommunities {
         id
         value
       }
+      location {
+        id
+        title
+        city
+        full_address
+      }
     }
   }
 }
@@ -222,7 +228,38 @@ query GetRecentComments {
   }
 }
 
-# 9. Mutation para comentar evento
+# 9. Buscar comunidades por localização
+query GetCommunitiesByLocation($city: String!) {
+  communities(
+    filters: {
+      location: {
+        city: { eq: $city }
+      }
+    }
+    sort: [{ field: "title", order: ASC }]
+  ) {
+    data {
+      id
+      title
+      short_description
+      members_quantity
+      location {
+        id
+        title
+        city
+        region
+        full_address
+      }
+      events {
+        id
+        title
+        start_date
+      }
+    }
+  }
+}
+
+# 10. Mutation para comentar evento
 mutation SubmitComment($eventId: String!) {
   submitEventComment(eventId: $eventId) {
     comment
@@ -232,7 +269,7 @@ mutation SubmitComment($eventId: String!) {
   }
 }
 
-# 10. Subscription para novos comentários
+# 11. Subscription para novos comentários
 subscription {
   commentEventAdded {
     id

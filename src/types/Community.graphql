@@ -11,7 +11,7 @@ type Community {
 
   events: [Event]
   tags: [Tag]
-  locations: [Location]
+  location: Location
   founded_in: String
   links: [Link]
   members_quantity: Int
@@ -28,7 +28,7 @@ input CommunityFilter {
   created_at: DateFilter
   updated_at: DateFilter
   tags: TagFilter
-  locations: LocationFilter
+  location: LocationFilter
   organizers: UserFilter
   and: [CommunityFilter]
   or: [CommunityFilter]
