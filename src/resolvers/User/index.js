@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const User = {
+  User: {
+    id: ({ documentId }) => documentId,
+  },
+
   Query: {
     users: async (_, { filters, sort, pagination, search }, { dataSources }) => {
       try {

@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const Tag = {
+  Tag: {
+    id: ({ documentId }) => documentId,
+  },
+
   Query: {
     tags: async (_, { filters, sort, pagination, search }, { dataSources }) => {
       try {

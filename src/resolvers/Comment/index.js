@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const Comment = {
+  Comment: {
+    id: ({ documentId }) => documentId,
+  },
+
   Query: {
     comments: async (_, { filters, sort, pagination, search }, { dataSources }) => {
       try {

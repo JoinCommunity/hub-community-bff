@@ -4,6 +4,7 @@ dotenv.config();
 
 const Speaker = {
   Speaker: {
+    id: ({ documentId }) => documentId,
     avatar: ({ avatar }) => {
       if (!avatar) return null;
       if (typeof avatar === 'string') {

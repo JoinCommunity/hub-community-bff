@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const Location = {
+  Location: {
+    id: ({ documentId }) => documentId,
+  },
+
   Query: {
     locations: async (_, { filters, sort, pagination, search }, { dataSources }) => {
       try {

@@ -5,6 +5,7 @@ dotenv.config();
 
 const Event = {
   Event: {
+    id: ({ documentId }) => documentId,
     images: ({ images }) => {
       if (!images || !Array.isArray(images)) return [];
       return images.map((image) => {

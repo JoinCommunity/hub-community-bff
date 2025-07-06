@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const Talk = {
+  Talk: {
+    id: ({ documentId }) => documentId,
+  },
+
   Query: {
     talks: async (_, { filters, sort, pagination, search }, { dataSources }) => {
       try {
