@@ -17,3 +17,48 @@ type Community {
   members_quantity: Int
   organizers: [User]
 }
+
+# Community filters
+input CommunityFilter {
+  id: StringFilter
+  title: StringFilter
+  short_description: StringFilter
+  founded_in: StringFilter
+  members_quantity: IntFilter
+  created_at: DateFilter
+  updated_at: DateFilter
+  tags: TagFilter
+  locations: LocationFilter
+  organizers: UserFilter
+  and: [CommunityFilter]
+  or: [CommunityFilter]
+}
+
+# Community sort
+input CommunitySort {
+  id: SortOrder
+  title: SortOrder
+  short_description: SortOrder
+  founded_in: SortOrder
+  members_quantity: SortOrder
+  created_at: SortOrder
+  updated_at: SortOrder
+}
+
+# Paginated Community response
+type PaginatedCommunities {
+  data: [Community]
+  meta: PaginationInfo
+}
+
+# Community queries
+extend type Query {
+  communities(
+    filters: CommunityFilter
+    sort: [CommunitySort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedCommunities
+  
+  community(id: String!): Community
+}

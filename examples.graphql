@@ -1,0 +1,247 @@
+# Exemplos de Queries GraphQL
+
+# 1. Buscar eventos com filtros
+query GetEvents {
+  events(
+    filters: {
+      title: { contains: "tech" }
+      start_date: { gte: "2024-01-01" }
+    }
+    sort: [{ field: "start_date", order: ASC }]
+    pagination: { page: 1, pageSize: 10 }
+    search: "conference"
+  ) {
+    data {
+      id
+      title
+      description
+      start_date
+      end_date
+      images
+      community {
+        id
+        title
+      }
+      talks {
+        id
+        title
+        speakers {
+          id
+          name
+          avatar
+        }
+      }
+    }
+    meta {
+      total
+      page
+      pageSize
+      pageCount
+    }
+  }
+}
+
+# 2. Buscar comunidades
+query GetCommunities {
+  communities(
+    filters: {
+      members_quantity: { gte: 100 }
+    }
+    sort: [{ field: "members_quantity", order: DESC }]
+  ) {
+    data {
+      id
+      title
+      short_description
+      members_quantity
+      organizers {
+        id
+        username
+      }
+      events {
+        id
+        title
+      }
+      tags {
+        id
+        value
+      }
+    }
+  }
+}
+
+# 3. Buscar palestrantes destacados
+query GetHighlightedSpeakers {
+  speakers(
+    filters: {
+      highlight: { eq: true }
+    }
+    sort: [{ field: "name", order: ASC }]
+  ) {
+    data {
+      id
+      name
+      biography
+      avatar
+      talks {
+        id
+        title
+        event {
+          id
+          title
+        }
+      }
+    }
+  }
+}
+
+# 4. Buscar um evento específico
+query GetEvent($id: String!) {
+  event(id: $id) {
+    id
+    title
+    description
+    start_date
+    end_date
+    images
+    community {
+      id
+      title
+    }
+    location {
+      id
+      title
+      full_address
+      city
+    }
+    talks {
+      id
+      title
+      speakers {
+        id
+        name
+        avatar
+      }
+    }
+    tags {
+      id
+      value
+    }
+  }
+}
+
+# 5. Buscar locais em uma cidade
+query GetLocationsByCity($city: String!) {
+  locations(
+    filters: {
+      city: { eq: $city }
+    }
+    sort: [{ field: "title", order: ASC }]
+  ) {
+    data {
+      id
+      title
+      full_address
+      city
+      region
+      latitude
+      longitude
+      google_maps_url
+      events {
+        id
+        title
+        start_date
+      }
+    }
+  }
+}
+
+# 6. Buscar tags populares
+query GetPopularTags {
+  tags(
+    sort: [{ field: "value", order: ASC }]
+  ) {
+    data {
+      id
+      value
+      events {
+        id
+        title
+      }
+      communities {
+        id
+        title
+      }
+    }
+  }
+}
+
+# 7. Buscar usuários com filtro
+query GetUsers {
+  users(
+    filters: {
+      role: { eq: "admin" }
+    }
+    sort: [{ field: "username", order: ASC }]
+  ) {
+    data {
+      id
+      username
+      email
+      role
+      communities {
+        id
+        title
+      }
+    }
+  }
+}
+
+# 8. Buscar comentários recentes
+query GetRecentComments {
+  comments(
+    sort: [{ field: "createdAt", order: DESC }]
+    pagination: { page: 1, pageSize: 10 }
+  ) {
+    data {
+      id
+      comment
+      user {
+        id
+        username
+      }
+      event {
+        id
+        title
+      }
+      createdAt
+    }
+    meta {
+      total
+    }
+  }
+}
+
+# 9. Mutation para comentar evento
+mutation SubmitComment($eventId: String!) {
+  submitEventComment(eventId: $eventId) {
+    comment
+    event {
+      id
+    }
+  }
+}
+
+# 10. Subscription para novos comentários
+subscription {
+  commentEventAdded {
+    id
+    comment
+    user {
+      username
+    }
+    event {
+      title
+    }
+  }
+} 

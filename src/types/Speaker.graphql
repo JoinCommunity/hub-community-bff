@@ -1,5 +1,6 @@
 scalar JSON
 
+# Speaker type
 type Speaker {
   id: String
   name: String
@@ -7,4 +8,45 @@ type Speaker {
   highlight: Boolean
   avatar: String
   talks: [Talk]
+  createdAt: String
+  updatedAt: String
+}
+
+# Speaker filters
+input SpeakerFilter {
+  id: StringFilter
+  name: StringFilter
+  highlight: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  talks: TalkFilter
+  and: [SpeakerFilter]
+  or: [SpeakerFilter]
+}
+
+# Speaker sort
+input SpeakerSort {
+  id: SortOrder
+  name: SortOrder
+  highlight: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Speaker response
+type PaginatedSpeakers {
+  data: [Speaker]
+  meta: PaginationInfo
+}
+
+# Speaker queries
+extend type Query {
+  speakers(
+    filters: SpeakerFilter
+    sort: [SpeakerSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedSpeakers
+  
+  speaker(id: String!): Speaker
 }

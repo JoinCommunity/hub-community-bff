@@ -1,3 +1,47 @@
+# Comment type
 type Comment {
+  id: String
   comment: String
+  user: User
+  event: Event
+  createdAt: String
+  updatedAt: String
+}
+
+# Comment filters
+input CommentFilter {
+  id: StringFilter
+  comment: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  user: UserFilter
+  event: EventFilter
+  and: [CommentFilter]
+  or: [CommentFilter]
+}
+
+# Comment sort
+input CommentSort {
+  id: SortOrder
+  comment: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Comment response
+type PaginatedComments {
+  data: [Comment]
+  meta: PaginationInfo
+}
+
+# Comment queries
+extend type Query {
+  comments(
+    filters: CommentFilter
+    sort: [CommentSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedComments
+  
+  comment(id: String!): Comment
 }

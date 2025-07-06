@@ -1,22 +1,69 @@
 scalar JSON
 
 type Event {
+  id: String
   title: String
   description: JSON
   start_date: String
   end_date: String
   images: [String]
   talks: [Talk]
+  community: Community
+  location: Location
+  tags: [Tag]
+  createdAt: String
+  updatedAt: String
 }
 
 type Query {
+  events(
+    filters: EventFilter
+    sort: [EventSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedEvents
+  
+  event(id: String!): Event
+  
+  # Legacy query for backward compatibility
   findEvents: [Event]
 }
 
 type Mutation {
-  submitEventComment(eventId: String): Comment
+  submitEventComment(eventId: String!): Comment
 }
 
 type Subscription {
   commentEventAdded: Comment
+}
+
+# Event filters
+input EventFilter {
+  id: StringFilter
+  title: StringFilter
+  start_date: DateFilter
+  end_date: DateFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  community: CommunityFilter
+  location: LocationFilter
+  tags: TagFilter
+  and: [EventFilter]
+  or: [EventFilter]
+}
+
+# Event sort
+input EventSort {
+  id: SortOrder
+  title: SortOrder
+  start_date: SortOrder
+  end_date: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Event response
+type PaginatedEvents {
+  data: [Event]
+  meta: PaginationInfo
 }

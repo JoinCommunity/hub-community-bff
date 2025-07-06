@@ -1,6 +1,8 @@
 scalar JSON
 
+# Talk type
 type Talk {
+  id: String
   title: String
   description: JSON
   occur_date: String
@@ -8,4 +10,50 @@ type Talk {
   highlight: Boolean
   speakers: [Speaker]
   event: Event
+  createdAt: String
+  updatedAt: String
+}
+
+# Talk filters
+input TalkFilter {
+  id: StringFilter
+  title: StringFilter
+  occur_date: DateFilter
+  room_description: StringFilter
+  highlight: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  event: EventFilter
+  speakers: SpeakerFilter
+  and: [TalkFilter]
+  or: [TalkFilter]
+}
+
+# Talk sort
+input TalkSort {
+  id: SortOrder
+  title: SortOrder
+  occur_date: SortOrder
+  room_description: SortOrder
+  highlight: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Talk response
+type PaginatedTalks {
+  data: [Talk]
+  meta: PaginationInfo
+}
+
+# Talk queries
+extend type Query {
+  talks(
+    filters: TalkFilter
+    sort: [TalkSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedTalks
+  
+  talk(id: String!): Talk
 }

@@ -1,9 +1,56 @@
-
-
+# User type
 type User {
   id: String
   username: String
   email: String
   role: String
   communities: [Community]
+  createdAt: String
+  updatedAt: String
+}
+
+# User filters
+input UserFilter {
+  id: StringFilter
+  username: StringFilter
+  email: StringFilter
+  role: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [UserFilter]
+  or: [UserFilter]
+}
+
+# User sort
+input UserSort {
+  id: SortOrder
+  username: SortOrder
+  email: SortOrder
+  role: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated User response
+type PaginatedUsers {
+  data: [User]
+  meta: PaginationInfo
+}
+
+# User queries
+extend type Query {
+  users(
+    filters: UserFilter
+    sort: [UserSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedUsers
+  
+  user(id: String!): User
+}
+
+# Pagination input
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 25
 }

@@ -1,0 +1,77 @@
+# Common types for filtering, sorting and searching
+scalar JSON
+scalar Date
+
+# Pagination types
+type PaginationInfo {
+  page: Int
+  pageSize: Int
+  pageCount: Int
+  total: Int
+}
+
+type PaginatedResponse {
+  data: [JSON]
+  meta: PaginationInfo
+}
+
+# Common filter types
+input StringFilter {
+  eq: String
+  ne: String
+  in: [String]
+  notIn: [String]
+  contains: String
+  notContains: String
+  startsWith: String
+  endsWith: String
+}
+
+input IntFilter {
+  eq: Int
+  ne: Int
+  gt: Int
+  gte: Int
+  lt: Int
+  lte: Int
+  in: [Int]
+  notIn: [Int]
+}
+
+input BooleanFilter {
+  eq: Boolean
+  ne: Boolean
+}
+
+input DateFilter {
+  eq: Date
+  ne: Date
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+}
+
+# Sort order enum
+enum SortOrder {
+  ASC
+  DESC
+}
+
+# Common sort inputs
+input Sort {
+  field: String!
+  order: SortOrder = ASC
+}
+
+# Link type
+type Link {
+  id: String
+  name: String
+  url: String
+}
+
+input LinkInput {
+  name: String!
+  url: String!
+} 

@@ -1,5 +1,4 @@
-
-
+# Location type
 type Location {
   id: String
   latitude: Int
@@ -16,4 +15,52 @@ type Location {
   region: String
 
   communities: [Community]
+}
+
+# Location filters
+input LocationFilter {
+  id: StringFilter
+  latitude: IntFilter
+  longitude: IntFilter
+  title: StringFilter
+  city: StringFilter
+  region: StringFilter
+  full_address: StringFilter
+  created_at: DateFilter
+  updated_at: DateFilter
+  communities: CommunityFilter
+  events: EventFilter
+  and: [LocationFilter]
+  or: [LocationFilter]
+}
+
+# Location sort
+input LocationSort {
+  id: SortOrder
+  latitude: SortOrder
+  longitude: SortOrder
+  title: SortOrder
+  city: SortOrder
+  region: SortOrder
+  full_address: SortOrder
+  created_at: SortOrder
+  updated_at: SortOrder
+}
+
+# Paginated Location response
+type PaginatedLocations {
+  data: [Location]
+  meta: PaginationInfo
+}
+
+# Location queries
+extend type Query {
+  locations(
+    filters: LocationFilter
+    sort: [LocationSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedLocations
+  
+  location(id: String!): Location
 }

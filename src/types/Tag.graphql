@@ -1,8 +1,47 @@
-
-
+# Tag type
 type Tag {
   id: String
   value: String
   events: [Event]
   communities: [Community]
+  createdAt: String
+  updatedAt: String
+}
+
+# Tag filters
+input TagFilter {
+  id: StringFilter
+  value: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  events: EventFilter
+  communities: CommunityFilter
+  and: [TagFilter]
+  or: [TagFilter]
+}
+
+# Tag sort
+input TagSort {
+  id: SortOrder
+  value: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Tag response
+type PaginatedTags {
+  data: [Tag]
+  meta: PaginationInfo
+}
+
+# Tag queries
+extend type Query {
+  tags(
+    filters: TagFilter
+    sort: [TagSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedTags
+  
+  tag(id: String!): Tag
 }
