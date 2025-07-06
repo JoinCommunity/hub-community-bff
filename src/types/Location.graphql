@@ -3,8 +3,8 @@ type Location {
   id: String
   latitude: Int
   longitude: Int
-  created_at: String
-  updated_at: String
+  createdAt: String
+  updatedAt: String
 
   title: String
   google_maps_url: String
@@ -26,8 +26,8 @@ input LocationFilter {
   city: StringFilter
   region: StringFilter
   full_address: StringFilter
-  created_at: DateFilter
-  updated_at: DateFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   communities: CommunityFilter
   events: EventFilter
   and: [LocationFilter]
@@ -43,8 +43,8 @@ input LocationSort {
   city: SortOrder
   region: SortOrder
   full_address: SortOrder
-  created_at: SortOrder
-  updated_at: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 # Paginated Location response

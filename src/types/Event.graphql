@@ -8,7 +8,7 @@ type Event {
   end_date: String
   images: [String]
   talks: [Talk]
-  community: Community
+  communities: [Community]
   location: Location
   tags: [Tag]
   createdAt: String

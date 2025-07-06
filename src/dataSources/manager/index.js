@@ -41,9 +41,20 @@ const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', popul
   });
   
   // Add sort
-  sort.forEach((sortItem, index) => {
-    if (sortItem.field && sortItem.order) {
-      params.append(`sort[${index}]`, `${sortItem.field}:${sortItem.order.toLowerCase()}`);
+  let sortIndex = 0;
+  sort.forEach((sortItem) => {
+    if (typeof sortItem === 'object' && sortItem !== null) {
+      // Handle object-based sort (like { id: 'ASC', title: 'DESC' })
+      Object.keys(sortItem).forEach((field) => {
+        if (sortItem[field] && sortItem[field] !== null) {
+          params.append(`sort[${sortIndex}]`, `${field}:${sortItem[field].toLowerCase()}`);
+          sortIndex++;
+        }
+      });
+    } else if (sortItem.field && sortItem.order) {
+      // Handle array-based sort (like [{ field: 'id', order: 'ASC' }])
+      params.append(`sort[${sortIndex}]`, `${sortItem.field}:${sortItem.order.toLowerCase()}`);
+      sortIndex++;
     }
   });
   
@@ -113,7 +124,7 @@ const findEvents = async (filters = {}, sort = [], pagination = {}, search = '')
     'talks.speakers',
     'talks.speakers.avatar',
     'images',
-    'community',
+    'communities',
     'location',
     'tags'
   ];
@@ -129,7 +140,7 @@ const findEventById = async (id) => {
     'talks.speakers',
     'talks.speakers.avatar',
     'images',
-    'community',
+    'communities',
     'location',
     'tags'
   ];

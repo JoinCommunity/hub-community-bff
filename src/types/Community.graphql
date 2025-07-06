@@ -6,8 +6,8 @@ type Community {
   short_description: String
   full_description: JSON
   images: [String]
-  created_at: String
-  updated_at: String
+  createdAt: String
+  updatedAt: String
 
   events: [Event]
   tags: [Tag]
@@ -25,8 +25,8 @@ input CommunityFilter {
   short_description: StringFilter
   founded_in: StringFilter
   members_quantity: IntFilter
-  created_at: DateFilter
-  updated_at: DateFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   tags: TagFilter
   location: LocationFilter
   organizers: UserFilter
@@ -41,8 +41,8 @@ input CommunitySort {
   short_description: SortOrder
   founded_in: SortOrder
   members_quantity: SortOrder
-  created_at: SortOrder
-  updated_at: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 # Paginated Community response
