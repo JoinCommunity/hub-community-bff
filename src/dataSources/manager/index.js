@@ -6,6 +6,29 @@ import graphqlUtils from '../../utils/graphqlUtils';
 
 dotenv.config();
 
+// Helper to recursively flatten filters into nested bracket notation for Strapi
+const OPERATORS = new Set([
+  'eq', 'ne', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'contains', 'notContains', 'containsi', 'notContainsi', 'null', 'notNull', 'between', 'startsWith', 'endsWith', 'or', 'and', 'not', 'some', 'every', 'none', 'is', 'notIn', 'like', 'notLike', 'iLike', 'notILike', 'overlap', 'contains', 'contained', 'any', 'all', 'exists', 'regex', 'search', 'size', 'elemMatch',
+]);
+
+function flattenFiltersForStrapi(obj, path = []) {
+  let result = [];
+  Object.keys(obj).forEach((key) => {
+    if (OPERATORS.has(key)) {
+      // This key is an operator, so use the path as the field path
+      result.push({ path: [...path], op: key, value: obj[key] });
+    } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+      // Recurse deeper
+      const nested = flattenFiltersForStrapi(obj[key], [...path, key]);
+      result = result.concat(nested);
+    } else {
+      // Primitive value, treat as eq
+      result.push({ path: [...path, key], op: 'eq', value: obj[key] });
+    }
+  });
+  return result;
+}
+
 /**
  * Build query string for Strapi v5 API
  * @param {Object} filters - Filters object
@@ -17,29 +40,30 @@ dotenv.config();
  */
 const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', populate = []) => {
   const params = new URLSearchParams();
-  
+
   // Add pagination
   if (pagination.page) params.append('pagination[page]', pagination.page);
   if (pagination.pageSize) params.append('pagination[pageSize]', pagination.pageSize);
-  
+
   // Add search
   if (search) {
     params.append('filters[$or][0][title][$containsi]', search);
     params.append('filters[$or][1][description][$containsi]', search);
     params.append('filters[$or][2][name][$containsi]', search);
   }
-  
-  // Add filters
-  Object.keys(filters).forEach((key, index) => {
-    if (filters[key] && typeof filters[key] === 'object') {
-      Object.keys(filters[key]).forEach((op) => {
-        if (filters[key][op] !== undefined) {
-          params.append(`filters[${key}][$${op}]`, filters[key][op]);
-        }
-      });
+
+  // Add filters (flattened for Strapi with nested brackets)
+  const flatFilters = flattenFiltersForStrapi(filters);
+  flatFilters.forEach(({ path, op, value }) => {
+    let val = value;
+    if (Array.isArray(val)) {
+      val = val.join(',');
     }
+    // Build nested bracket notation for the path
+    const field = path.reduce((acc, curr) => `${acc}[${curr}]`, 'filters');
+    params.append(`${field}[$${op}]`, val);
   });
-  
+
   // Add sort
   let sortIndex = 0;
   sort.forEach((sortItem) => {
@@ -48,21 +72,21 @@ const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', popul
       Object.keys(sortItem).forEach((field) => {
         if (sortItem[field] && sortItem[field] !== null) {
           params.append(`sort[${sortIndex}]`, `${field}:${sortItem[field].toLowerCase()}`);
-          sortIndex++;
+          sortIndex += 1;
         }
       });
     } else if (sortItem.field && sortItem.order) {
       // Handle array-based sort (like [{ field: 'id', order: 'ASC' }])
       params.append(`sort[${sortIndex}]`, `${sortItem.field}:${sortItem.order.toLowerCase()}`);
-      sortIndex++;
+      sortIndex += 1;
     }
   });
-  
+
   // Add populate
   populate.forEach((popItem, index) => {
     params.append(`populate[${index}]`, popItem);
   });
-  
+
   return params.toString();
 };
 
@@ -128,13 +152,13 @@ const findEvents = async (filters = {}, sort = [], pagination = {}, search = '')
     'images',
     'communities',
     'location',
-    'tags'
+    'tags',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/events${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findEventById = async (id) => {
@@ -144,13 +168,13 @@ const findEventById = async (id) => {
     'images',
     'communities',
     'location',
-    'tags'
+    'tags',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/events/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Community methods
@@ -160,13 +184,13 @@ const findCommunities = async (filters = {}, sort = [], pagination = {}, search 
     'tags',
     'location',
     'organizers',
-    'images'
+    'images',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/communities${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findCommunityById = async (id) => {
@@ -175,13 +199,13 @@ const findCommunityById = async (id) => {
     'tags',
     'location',
     'organizers',
-    'images'
+    'images',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/communities/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Talk methods
@@ -189,152 +213,152 @@ const findTalks = async (filters = {}, sort = [], pagination = {}, search = '') 
   const populate = [
     'speakers',
     'speakers.avatar',
-    'event'
+    'event',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/talks${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findTalkById = async (id) => {
   const populate = [
     'speakers',
     'speakers.avatar',
-    'event'
+    'event',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/talks/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Speaker methods
 const findSpeakers = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
     'talks',
-    'avatar'
+    'avatar',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/speakers${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findSpeakerById = async (id) => {
   const populate = [
     'talks',
-    'avatar'
+    'avatar',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/speakers/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Location methods
 const findLocations = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
     'events',
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/locations${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findLocationById = async (id) => {
   const populate = [
     'events',
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/locations/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Tag methods
 const findTags = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
     'events',
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/tags${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findTagById = async (id) => {
   const populate = [
     'events',
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/tags/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // User methods
 const findUsers = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/users${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findUserById = async (id) => {
   const populate = [
-    'communities'
+    'communities',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/users/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 // Comment methods
 const findComments = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
     'user',
-    'event'
+    'event',
   ];
-  
+
   const query = buildQuery(filters, sort, pagination, search, populate);
   const route = `/comments${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
 const findCommentById = async (id) => {
   const populate = [
     'user',
-    'event'
+    'event',
   ];
-  
+
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/comments/${id}${query ? `?${query}` : ''}`;
-  
-  return await fetch(route, 'GET');
+
+  return fetch(route, 'GET');
 };
 
-export default (headers) => ({
+export default () => ({
   // Events
   findEvents,
   findEventById,

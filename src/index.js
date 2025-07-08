@@ -119,7 +119,7 @@ const startServer = async () => {
     }),
   );
 
-  const PORT = 4001;
+  const PORT = 4080;
   // Now that our HTTP server is fully set up, we can listen to it.
   httpServer.listen(PORT, () => {
     console.log(`Server is now running on http://localhost:${PORT}/`);
