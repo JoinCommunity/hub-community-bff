@@ -55,7 +55,11 @@ function flattenFiltersForStrapi(obj, path = []) {
     if (OPERATORS.has(key)) {
       // This key is an operator, so use the path as the field path
       result.push({ path: [...path], op: key, value: obj[key] });
-    } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+    } else if (
+      typeof obj[key] === 'object' &&
+      obj[key] !== null &&
+      !Array.isArray(obj[key])
+    ) {
       // Recurse deeper
       const nested = flattenFiltersForStrapi(obj[key], [...path, key]);
       result = result.concat(nested);
@@ -76,12 +80,19 @@ function flattenFiltersForStrapi(obj, path = []) {
  * @param {Array} populate - Populate array
  * @returns {String} Query string
  */
-const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', populate = []) => {
+const buildQuery = (
+  filters = {},
+  sort = [],
+  pagination = {},
+  search = '',
+  populate = [],
+) => {
   const params = new URLSearchParams();
 
   // Add pagination
   if (pagination.page) params.append('pagination[page]', pagination.page);
-  if (pagination.pageSize) params.append('pagination[pageSize]', pagination.pageSize);
+  if (pagination.pageSize)
+    params.append('pagination[pageSize]', pagination.pageSize);
 
   // Add search
   if (search) {
@@ -109,13 +120,19 @@ const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', popul
       // Handle object-based sort (like { id: 'ASC', title: 'DESC' })
       Object.keys(sortItem).forEach((field) => {
         if (sortItem[field] && sortItem[field] !== null) {
-          params.append(`sort[${sortIndex}]`, `${field}:${sortItem[field].toLowerCase()}`);
+          params.append(
+            `sort[${sortIndex}]`,
+            `${field}:${sortItem[field].toLowerCase()}`,
+          );
           sortIndex += 1;
         }
       });
     } else if (sortItem.field && sortItem.order) {
       // Handle array-based sort (like [{ field: 'id', order: 'ASC' }])
-      params.append(`sort[${sortIndex}]`, `${sortItem.field}:${sortItem.order.toLowerCase()}`);
+      params.append(
+        `sort[${sortIndex}]`,
+        `${sortItem.field}:${sortItem.order.toLowerCase()}`,
+      );
       sortIndex += 1;
     }
   });
@@ -148,9 +165,6 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
 
   console.log(`[${method}] - ${decodeURIComponent(url)}`);
 
-  console.log('headers: ', headers);
-  console.log('body: ', body);
-
   try {
     response = await axios({
       method,
@@ -160,10 +174,10 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
     });
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('error: ', error.message);
+      console.log(`Error on try ${method} in ${url}`);
     }
 
-    throw new Error(`Error on try ${method} in ${url}`);
+    throw new Error(error.response.data.error.message);
   }
 
   if (process.env.NODE_ENV === 'production') {

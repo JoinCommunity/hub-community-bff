@@ -62,7 +62,7 @@ const startServer = async () => {
         };
       },
     },
-    wsServer
+    wsServer,
   );
 
   const apolloServer = new ApolloServer({
@@ -95,7 +95,7 @@ const startServer = async () => {
         const acceptLanguage = req.headers['accept-language'] || 'en';
 
         const headers = {
-          authorization: req.headers.authorization || req.headers.Authorization,
+          Authorization: req.headers.authorization || req.headers.Authorization,
           'accept-language': acceptLanguage,
         };
 
@@ -116,7 +116,7 @@ const startServer = async () => {
           acceptLanguage,
         };
       },
-    })
+    }),
   );
 
   const PORT = process.env.PORT || 4001;

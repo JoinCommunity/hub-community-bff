@@ -2,11 +2,11 @@ import managerNetworkUtils from '../../../utils/network/manager';
 
 const { fetch, buildQuery } = managerNetworkUtils;
 
-const createSpeaker = (args, headers) =>
-  fetch('/speakers', 'POST', headers, { data: args });
+const createSpeaker = (data, headers) =>
+  fetch('/speakers', 'POST', headers, { data });
 
-const updateSpeaker = (args, headers) =>
-  fetch(`/speakers/${args.id}`, 'PUT', headers, { data: args });
+const updateSpeaker = (id, data, headers) =>
+  fetch(`/speakers/${id}`, 'PUT', headers, { data });
 
 const deleteSpeaker = (args, headers) =>
   fetch('/speakers', 'DELETE', headers, { data: args });
@@ -26,8 +26,8 @@ const findSpeakers = (args, headers) => {
 
 const speakers = ({ headers }) => ({
   findSpeakers: (args) => findSpeakers(args, headers),
-  createSpeaker: (args) => createSpeaker(args, headers),
-  updateSpeaker: (args) => updateSpeaker(args, headers),
+  createSpeaker: (data) => createSpeaker(data, headers),
+  updateSpeaker: (id, data) => updateSpeaker(id, data, headers),
   deleteSpeaker: (args) => deleteSpeaker(args, headers),
 });
 
