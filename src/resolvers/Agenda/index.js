@@ -5,7 +5,6 @@ dotenv.config();
 const Agenda = {
   Agenda: {
     id: ({ documentId }) => documentId,
-
     user: (parent) => parent.users_permissions_user,
   },
 
@@ -36,9 +35,17 @@ const Agenda = {
       }
     },
 
-    agenda: async (_, { id }, { dataSources }) => {
+    agenda: async (_, { id }, { dataSources, user }) => {
       try {
-        const response = await dataSources.manager.findAgendaById(id);
+        const response = await dataSources.managerIntegration.findAgenda(id);
+
+        // Check if the agenda belongs to the current user
+        if (
+          response.data.users_permissions_user?.documentId !== user.documentId
+        ) {
+          throw new Error('You do not have permission to access this agenda');
+        }
+
         return response.data;
       } catch (err) {
         throw new Error(`Error fetching agenda: ${err.message}`);
@@ -47,27 +54,62 @@ const Agenda = {
   },
 
   Mutation: {
-    createAgenda: async (_, { input }, { dataSources }) => {
+    createAgenda: async (_, { input }, { dataSources, user }) => {
       try {
-        const response = await dataSources.manager.createAgenda(input);
+        // Associate the agenda with the current user
+        const agendaInput = {
+          ...input,
+          users_permissions_user: user.documentId,
+        };
+
+        const response = await dataSources.managerIntegration.createAgenda(
+          agendaInput,
+        );
         return response.data;
       } catch (err) {
         throw new Error(`Error creating agenda: ${err.message}`);
       }
     },
 
-    updateAgenda: async (_, { id, input }, { dataSources }) => {
+    updateAgenda: async (_, { id, input }, { dataSources, user }) => {
       try {
-        const response = await dataSources.manager.updateAgenda(id, input);
+        // First, check if the agenda belongs to the current user
+        const existingAgenda = await dataSources.managerIntegration.findAgenda(
+          id,
+        );
+
+        if (
+          existingAgenda.data.users_permissions_user?.documentId !==
+          user.documentId
+        ) {
+          throw new Error('You do not have permission to update this agenda');
+        }
+
+        const response = await dataSources.managerIntegration.updateAgenda(
+          id,
+          input,
+        );
         return response.data;
       } catch (err) {
         throw new Error(`Error updating agenda: ${err.message}`);
       }
     },
 
-    deleteAgenda: async (_, { id }, { dataSources }) => {
+    deleteAgenda: async (_, { id }, { dataSources, user }) => {
       try {
-        const response = await dataSources.manager.deleteAgenda(id);
+        // First, check if the agenda belongs to the current user
+        const existingAgenda = await dataSources.managerIntegration.findAgenda(
+          id,
+        );
+
+        if (
+          existingAgenda.data.users_permissions_user?.documentId !==
+          user.documentId
+        ) {
+          throw new Error('You do not have permission to delete this agenda');
+        }
+
+        const response = await dataSources.managerIntegration.deleteAgenda(id);
         return response.data;
       } catch (err) {
         throw new Error(`Error deleting agenda: ${err.message}`);
