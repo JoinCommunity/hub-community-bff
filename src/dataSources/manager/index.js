@@ -55,11 +55,7 @@ function flattenFiltersForStrapi(obj, path = []) {
     if (OPERATORS.has(key)) {
       // This key is an operator, so use the path as the field path
       result.push({ path: [...path], op: key, value: obj[key] });
-    } else if (
-      typeof obj[key] === 'object' &&
-      obj[key] !== null &&
-      !Array.isArray(obj[key])
-    ) {
+    } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
       // Recurse deeper
       const nested = flattenFiltersForStrapi(obj[key], [...path, key]);
       result = result.concat(nested);
@@ -80,19 +76,12 @@ function flattenFiltersForStrapi(obj, path = []) {
  * @param {Array} populate - Populate array
  * @returns {String} Query string
  */
-const buildQuery = (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = '',
-  populate = []
-) => {
+const buildQuery = (filters = {}, sort = [], pagination = {}, search = '', populate = []) => {
   const params = new URLSearchParams();
 
   // Add pagination
   if (pagination.page) params.append('pagination[page]', pagination.page);
-  if (pagination.pageSize)
-    params.append('pagination[pageSize]', pagination.pageSize);
+  if (pagination.pageSize) params.append('pagination[pageSize]', pagination.pageSize);
 
   // Add search
   if (search) {
@@ -120,19 +109,13 @@ const buildQuery = (
       // Handle object-based sort (like { id: 'ASC', title: 'DESC' })
       Object.keys(sortItem).forEach((field) => {
         if (sortItem[field] && sortItem[field] !== null) {
-          params.append(
-            `sort[${sortIndex}]`,
-            `${field}:${sortItem[field].toLowerCase()}`
-          );
+          params.append(`sort[${sortIndex}]`, `${field}:${sortItem[field].toLowerCase()}`);
           sortIndex += 1;
         }
       });
     } else if (sortItem.field && sortItem.order) {
       // Handle array-based sort (like [{ field: 'id', order: 'ASC' }])
-      params.append(
-        `sort[${sortIndex}]`,
-        `${sortItem.field}:${sortItem.order.toLowerCase()}`
-      );
+      params.append(`sort[${sortIndex}]`, `${sortItem.field}:${sortItem.order.toLowerCase()}`);
       sortIndex += 1;
     }
   });
@@ -200,12 +183,7 @@ const fetch = async (route, method, customHeaders = {}, body = null) => {
 };
 
 // Event methods
-const findEvents = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findEvents = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = [
     'talks.speakers',
     'talks.speakers.avatar',
@@ -238,12 +216,7 @@ const findEventById = async (id) => {
 };
 
 // Community methods
-const findCommunities = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findCommunities = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['events', 'tags', 'location', 'organizers', 'images'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -262,12 +235,7 @@ const findCommunityById = async (id) => {
 };
 
 // Talk methods
-const findTalks = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findTalks = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['speakers', 'speakers.avatar', 'event'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -286,12 +254,7 @@ const findTalkById = async (id) => {
 };
 
 // Speaker methods
-const findSpeakers = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findSpeakers = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['talks', 'avatar'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -310,12 +273,7 @@ const findSpeakerById = async (id) => {
 };
 
 // Location methods
-const findLocations = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findLocations = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['events', 'communities'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -334,12 +292,7 @@ const findLocationById = async (id) => {
 };
 
 // Tag methods
-const findTags = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findTags = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['events', 'communities'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -358,12 +311,7 @@ const findTagById = async (id) => {
 };
 
 // User methods
-const findUsers = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findUsers = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['communities'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -382,12 +330,7 @@ const findUserById = async (id) => {
 };
 
 // Comment methods
-const findComments = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findComments = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['user', 'event'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -406,12 +349,7 @@ const findCommentById = async (id) => {
 };
 
 // Rate methods
-const findRates = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findRates = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['user', 'event', 'talk'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -445,12 +383,7 @@ const deleteRate = async (id) => {
 };
 
 // CommentReply methods
-const findCommentReplies = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findCommentReplies = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['parent_comment', 'user_creator', 'users_taggeds'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
@@ -484,12 +417,7 @@ const deleteCommentReply = async (id) => {
 };
 
 // Agenda methods
-const findAgendas = async (
-  filters = {},
-  sort = [],
-  pagination = {},
-  search = ''
-) => {
+const findAgendas = async (filters = {}, sort = [], pagination = {}, search = '') => {
   const populate = ['event', 'talks', 'comment'];
 
   const query = buildQuery(filters, sort, pagination, search, populate);
