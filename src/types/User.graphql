@@ -9,6 +9,7 @@ type User {
   agenda: [Agenda]
   createdAt: String
   updatedAt: String
+  token: String
 }
 
 # User filters
@@ -47,8 +48,12 @@ extend type Query {
     pagination: PaginationInput
     search: String
   ): PaginatedUsers
-  
+
   user(id: String!): User
+}
+
+extend type Mutation {
+  signIn(identifier: String!, password: String!): User
 }
 
 # Pagination input

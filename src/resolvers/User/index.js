@@ -26,6 +26,23 @@ const User = {
       }
     },
   },
+
+  Mutation: {
+    signIn: async (_, { identifier, password }, { dataSources }) => {
+      try {
+        const response = await dataSources.managerPublic.signIn({ identifier, password });
+
+        const { jwt, user } = response.data;
+
+        return {
+          ...user,
+          token: jwt,
+        };
+      } catch (err) {
+        throw new Error(`Error signing in: ${err.message}`);
+      }
+    },
+  },
 };
 
-export default User; 
+export default User;
