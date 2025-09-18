@@ -37,7 +37,18 @@ const Agenda = {
 
     agenda: async (_, { id }, { dataSources, user }) => {
       try {
-        const response = await dataSources.managerIntegration.findAgenda(id);
+        const response = await dataSources.managerIntegration.findAgenda(id, {
+          populate: ['event', 'talks', 'users_permissions_user'],
+          fields: [
+            'id',
+            'documentId',
+            'slug',
+            'is_public',
+            'createdAt',
+            'updatedAt',
+          ],
+          publicationState: 'live',
+        });
 
         // Check if the agenda belongs to the current user
         if (
@@ -76,6 +87,11 @@ const Agenda = {
         // First, check if the agenda belongs to the current user
         const existingAgenda = await dataSources.managerIntegration.findAgenda(
           id,
+          {
+            populate: ['users_permissions_user'],
+            fields: ['id', 'documentId', 'users_permissions_user'],
+            publicationState: 'live',
+          },
         );
 
         if (
@@ -85,9 +101,23 @@ const Agenda = {
           throw new Error('You do not have permission to update this agenda');
         }
 
+        const dataToUpdate = {
+          ...input,
+          talks: {
+            connect: input.talksToAdd || [],
+            disconnect: input.talksToRemove || [],
+          },
+        };
+
+        delete dataToUpdate.talksToAdd;
+        delete dataToUpdate.talksToRemove;
+
         const response = await dataSources.managerIntegration.updateAgenda(
           id,
-          input,
+          dataToUpdate,
+          {
+            populate: ['users_permissions_user', 'event', 'talks'],
+          },
         );
         return response.data;
       } catch (err) {
@@ -100,6 +130,11 @@ const Agenda = {
         // First, check if the agenda belongs to the current user
         const existingAgenda = await dataSources.managerIntegration.findAgenda(
           id,
+          {
+            populate: ['users_permissions_user'],
+            fields: ['id', 'documentId', 'users_permissions_user'],
+            publicationState: 'live',
+          },
         );
 
         if (

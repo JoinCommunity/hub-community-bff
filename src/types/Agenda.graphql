@@ -5,7 +5,6 @@ type Agenda {
   talks: [Talk]
   slug: String
   is_public: Boolean
-  comment: Comment
   createdAt: String
   updatedAt: String
   user: User
@@ -21,7 +20,6 @@ input AgendaFilter {
   createdAt: DateFilter
   updatedAt: DateFilter
   event: EventFilter
-  comment: CommentFilter
   and: [AgendaFilter]
   or: [AgendaFilter]
 }
@@ -57,17 +55,16 @@ extend type Query {
 input AgendaInput {
   event: String
   talks: [String]
-  slug: String!
+  slug: String
   is_public: Boolean
-  comment: String
 }
 
 input AgendaUpdateInput {
   event: String
-  talks: [String]
+  talksToAdd: [String]
+  talksToRemove: [String]
   slug: String
   is_public: Boolean
-  comment: String
 }
 
 # Agenda mutations
