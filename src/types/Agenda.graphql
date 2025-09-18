@@ -9,6 +9,7 @@ type Agenda {
   createdAt: String
   updatedAt: String
   user: User
+  documentId: String
 }
 
 # Agenda filters
