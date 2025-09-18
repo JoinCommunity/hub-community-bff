@@ -39,9 +39,9 @@ const startServer = async () => {
       schema,
       context: async (ctx) => {
         const headers = {
-          authorization:
-            ctx.connectionParams.authorization
-            || ctx.connectionParams.Authorization,
+          Authorization:
+            ctx.connectionParams.authorization ||
+            ctx.connectionParams.Authorization,
           'accept-language': ctx.connectionParams['accept-language'] || 'pt-br',
         };
 
@@ -62,7 +62,7 @@ const startServer = async () => {
         };
       },
     },
-    wsServer,
+    wsServer
   );
 
   const apolloServer = new ApolloServer({
@@ -116,7 +116,7 @@ const startServer = async () => {
           acceptLanguage,
         };
       },
-    }),
+    })
   );
 
   const PORT = process.env.PORT || 4001;
