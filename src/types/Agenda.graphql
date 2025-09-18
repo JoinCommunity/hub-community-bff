@@ -14,6 +14,7 @@ type Agenda {
 # Agenda filters
 input AgendaFilter {
   id: StringFilter
+  documentId: StringFilter
   slug: StringFilter
   is_public: BooleanFilter
   createdAt: DateFilter

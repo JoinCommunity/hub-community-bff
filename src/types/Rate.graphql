@@ -12,6 +12,7 @@ type Rate {
 # Rate filters
 input RateFilter {
   id: StringFilter
+  documentId: StringFilter
   value: IntFilter
   createdAt: DateFilter
   updatedAt: DateFilter

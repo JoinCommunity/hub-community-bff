@@ -15,6 +15,7 @@ type User {
 # User filters
 input UserFilter {
   id: StringFilter
+  documentId: StringFilter
   username: StringFilter
   email: StringFilter
   role: StringFilter

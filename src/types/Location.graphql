@@ -20,6 +20,7 @@ type Location {
 # Location filters
 input LocationFilter {
   id: StringFilter
+  documentId: StringFilter
   latitude: IntFilter
   longitude: IntFilter
   title: StringFilter

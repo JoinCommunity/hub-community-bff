@@ -11,6 +11,7 @@ type Comment {
 # Comment filters
 input CommentFilter {
   id: StringFilter
+  documentId: StringFilter
   comment: StringFilter
   createdAt: DateFilter
   updatedAt: DateFilter

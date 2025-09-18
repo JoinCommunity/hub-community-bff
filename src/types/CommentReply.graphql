@@ -12,6 +12,7 @@ type CommentReply {
 # CommentReply filters
 input CommentReplyFilter {
   id: StringFilter
+  documentId: StringFilter
   message: StringFilter
   createdAt: DateFilter
   updatedAt: DateFilter

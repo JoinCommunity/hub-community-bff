@@ -27,7 +27,7 @@ const Agenda = {
           sort,
           pagination,
           search,
-          populate: ['event', 'talks', 'comment', 'users_permissions_user'],
+          populate: ['event', 'talks', 'users_permissions_user'],
         });
         return response;
       } catch (err) {

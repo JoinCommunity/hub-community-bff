@@ -16,6 +16,7 @@ type Speaker {
 # Speaker filters
 input SpeakerFilter {
   id: StringFilter
+  documentId: StringFilter
   name: StringFilter
   highlight: BooleanFilter
   createdAt: DateFilter

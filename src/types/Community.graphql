@@ -21,6 +21,7 @@ type Community {
 # Community filters
 input CommunityFilter {
   id: StringFilter
+  documentId: StringFilter
   title: StringFilter
   short_description: StringFilter
   founded_in: StringFilter

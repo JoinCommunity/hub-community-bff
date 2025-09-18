@@ -19,6 +19,7 @@ type Talk {
 # Talk filters
 input TalkFilter {
   id: StringFilter
+  documentId: StringFilter
   title: StringFilter
   occur_date: DateFilter
   room_description: StringFilter
