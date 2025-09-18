@@ -5,21 +5,35 @@ dotenv.config();
 const Agenda = {
   Agenda: {
     id: ({ documentId }) => documentId,
+
+    user: (parent) => parent.users_permissions_user,
   },
 
   Query: {
     agendas: async (
       _,
       { filters, sort, pagination, search },
-      { dataSources }
+      { dataSources, user },
     ) => {
+      console.log('user: ', user);
+
+      const customFilters = {
+        ...filters,
+        users_permissions_user: {
+          documentId: user.documentId,
+        },
+      };
+
+      console.log('user: ', user);
+
       try {
-        const response = await dataSources.manager.findAgendas(
-          filters,
+        const response = await dataSources.managerIntegration.findAgendas({
+          filters: customFilters,
           sort,
           pagination,
-          search
-        );
+          search,
+          populate: ['event', 'talks', 'comment', 'users_permissions_user'],
+        });
         return response;
       } catch (err) {
         throw new Error(`Error fetching agendas: ${err.message}`);

@@ -8,6 +8,7 @@ type Agenda {
   comment: Comment
   createdAt: String
   updatedAt: String
+  user: User
 }
 
 # Agenda filters
@@ -46,7 +47,7 @@ extend type Query {
     pagination: PaginationInput
     search: String
   ): PaginatedAgendas
-  
+
   agenda(id: String!): Agenda
 }
 
