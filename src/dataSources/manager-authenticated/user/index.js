@@ -7,8 +7,6 @@ const cachedMe = new Map();
 const me = async ({ headers, userId }) => {
   if (cachedMe.has(userId)) {
     const cachedUser = cachedMe.get(userId);
-    console.log('cachedUser: ', cachedUser);
-
     return cachedUser;
   }
 

@@ -15,16 +15,12 @@ const Agenda = {
       { filters, sort, pagination, search },
       { dataSources, user },
     ) => {
-      console.log('user: ', user);
-
       const customFilters = {
         ...filters,
         users_permissions_user: {
           documentId: user.documentId,
         },
       };
-
-      console.log('user: ', user);
 
       try {
         const response = await dataSources.managerIntegration.findAgendas({

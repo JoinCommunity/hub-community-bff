@@ -8,8 +8,6 @@ const findAgendas = async (
 ) => {
   const query = buildQuery(filters, sort, pagination, search, populate);
 
-  console.log('query: ', query);
-
   const route = `/agendas${query ? `?${query}` : ''}`;
   return fetch(route, 'GET', headers);
 };
