@@ -12,6 +12,7 @@ type Talk {
   event: Event
   createdAt: String
   updatedAt: String
+  documentId: String
 }
 
 # Talk filters
@@ -54,6 +55,6 @@ extend type Query {
     pagination: PaginationInput
     search: String
   ): PaginatedTalks
-  
+
   talk(id: String!): Talk
 }
