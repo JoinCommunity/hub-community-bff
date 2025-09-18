@@ -5,6 +5,8 @@ type User {
   email: String
   role: String
   communities: [Community]
+  speaker: Speaker
+  agenda: [Agenda]
   createdAt: String
   updatedAt: String
 }

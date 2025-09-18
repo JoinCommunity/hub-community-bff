@@ -8,6 +8,7 @@ type Speaker {
   highlight: Boolean
   avatar: String
   talks: [Talk]
+  user: User
   createdAt: String
   updatedAt: String
 }

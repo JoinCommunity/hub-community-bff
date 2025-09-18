@@ -11,6 +11,7 @@ type Event {
   communities: [Community]
   location: Location
   tags: [Tag]
+  comments: [Comment]
   createdAt: String
   updatedAt: String
 }

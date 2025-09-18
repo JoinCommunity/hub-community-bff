@@ -1,0 +1,75 @@
+# Agenda type
+type Agenda {
+  id: String
+  event: Event
+  talks: [Talk]
+  slug: String
+  is_public: Boolean
+  comment: Comment
+  createdAt: String
+  updatedAt: String
+}
+
+# Agenda filters
+input AgendaFilter {
+  id: StringFilter
+  slug: StringFilter
+  is_public: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  event: EventFilter
+  comment: CommentFilter
+  and: [AgendaFilter]
+  or: [AgendaFilter]
+}
+
+# Agenda sort
+input AgendaSort {
+  id: SortOrder
+  slug: SortOrder
+  is_public: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+# Paginated Agenda response
+type PaginatedAgendas {
+  data: [Agenda]
+  meta: PaginationInfo
+}
+
+# Agenda queries
+extend type Query {
+  agendas(
+    filters: AgendaFilter
+    sort: [AgendaSort]
+    pagination: PaginationInput
+    search: String
+  ): PaginatedAgendas
+  
+  agenda(id: String!): Agenda
+}
+
+# Agenda input types
+input AgendaInput {
+  event: String
+  talks: [String]
+  slug: String!
+  is_public: Boolean
+  comment: String
+}
+
+input AgendaUpdateInput {
+  event: String
+  talks: [String]
+  slug: String
+  is_public: Boolean
+  comment: String
+}
+
+# Agenda mutations
+extend type Mutation {
+  createAgenda(input: AgendaInput!): Agenda
+  updateAgenda(id: String!, input: AgendaUpdateInput!): Agenda
+  deleteAgenda(id: String!): Agenda
+}
