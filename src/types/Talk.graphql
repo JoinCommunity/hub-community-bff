@@ -13,6 +13,7 @@ type Talk {
   createdAt: String
   updatedAt: String
   documentId: String
+  subtitle: String
 }
 
 # Talk filters
