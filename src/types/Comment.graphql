@@ -1,7 +1,7 @@
 # Comment type
 type Comment {
   id: String
-  comment: String
+  comment: JSON
   user: User
   event: Event
   createdAt: String
@@ -12,7 +12,6 @@ type Comment {
 input CommentFilter {
   id: StringFilter
   documentId: StringFilter
-  comment: StringFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   user: UserFilter
@@ -24,7 +23,6 @@ input CommentFilter {
 # Comment sort
 input CommentSort {
   id: SortOrder
-  comment: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
 }
@@ -43,6 +41,14 @@ extend type Query {
     pagination: PaginationInput
     search: String
   ): PaginatedComments
-  
-  comment(id: String!): Comment
+}
+
+input CommentInput {
+  comment: JSON
+  talk_id: String
+}
+
+extend type Mutation {
+  createComment(input: CommentInput!): Comment
+  deleteComment(id: String!): Boolean
 }
