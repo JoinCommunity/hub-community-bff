@@ -12,7 +12,13 @@ const findComments = async (
   { filters = {}, sort = [], pagination = {}, search = '', populate = [] },
   headers,
 ) => {
-  const query = buildQuery(filters, sort, pagination, search, populate);
+  let query;
+
+  try {
+    query = buildQuery(filters, sort, pagination, search, populate);
+  } catch (err) {
+    throw new Error(`Error building query: ${err.message}`);
+  }
 
   const route = `/comments${query ? `?${query}` : ''}`;
   return fetch(route, 'GET', headers);

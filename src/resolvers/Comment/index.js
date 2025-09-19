@@ -9,16 +9,17 @@ const Comment = {
   Query: {
     comments: async (
       _,
-      { filters, sort, pagination, search },
+      { filters, sort, pagination, search, populate },
       { dataSources },
     ) => {
       try {
-        const response = await dataSources.managerIntegration.findComments(
+        const response = await dataSources.managerIntegration.findComments({
           filters,
           sort,
           pagination,
           search,
-        );
+          populate,
+        });
         return response;
       } catch (err) {
         throw new Error(`Error fetching comments: ${err.message}`);

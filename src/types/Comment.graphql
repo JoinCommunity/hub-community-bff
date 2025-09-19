@@ -4,6 +4,7 @@ type Comment {
   comment: JSON
   user: User
   event: Event
+  talk: Talk
   createdAt: String
   updatedAt: String
 }
@@ -16,6 +17,7 @@ input CommentFilter {
   updatedAt: DateFilter
   user: UserFilter
   event: EventFilter
+  talk: TalkFilter
   and: [CommentFilter]
   or: [CommentFilter]
 }
@@ -40,6 +42,7 @@ extend type Query {
     sort: [CommentSort]
     pagination: PaginationInput
     search: String
+    populate: [String]
   ): PaginatedComments
 }
 
