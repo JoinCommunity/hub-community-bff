@@ -5,6 +5,7 @@ dotenv.config();
 const Comment = {
   Comment: {
     comment: ({ message }) => message,
+    user: (parent) => parent.user_creator,
   },
   Query: {
     comments: async (
