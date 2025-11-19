@@ -91,8 +91,7 @@ const buildQuery = (
 
   // Add pagination
   if (pagination.page) params.append('pagination[page]', pagination.page);
-  if (pagination.pageSize)
-    params.append('pagination[pageSize]', pagination.pageSize);
+  if (pagination.pageSize) params.append('pagination[pageSize]', pagination.pageSize);
 
   // Add search
   if (search) {
@@ -253,7 +252,7 @@ const findCommunities = async (
 };
 
 const findCommunityById = async (id) => {
-  const populate = ['events', 'tags', 'location', 'organizers', 'images'];
+  const populate = ['events', 'tags', 'location', 'organizers', 'images', 'links'];
 
   const query = buildQuery({}, [], {}, '', populate);
   const route = `/communities/${id}${query ? `?${query}` : ''}`;

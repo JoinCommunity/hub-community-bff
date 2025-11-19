@@ -18,6 +18,15 @@ const Community = {
         })
         .filter(Boolean);
     },
+    links: ({ links }) => {
+      if (!links || !Array.isArray(links)) return [];
+      return links.map((link) => {
+        if (typeof link === 'string') {
+          return link;
+        }
+        return { id: link.id, name: link.title, url: link.value } || null;
+      }).filter(Boolean);
+    },
   },
 
   Query: {
