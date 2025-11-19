@@ -7,19 +7,32 @@ const Community = {
     id: ({ documentId }) => documentId,
     images: ({ images }) => {
       if (!images || !Array.isArray(images)) return [];
-      return images.map((image) => {
-        if (typeof image === 'string') {
-          return image.startsWith('http') ? image : `${process.env.MANAGER_URL}${image}`;
-        }
-        return image?.url ? `${process.env.MANAGER_URL}${image.url}` : null;
-      }).filter(Boolean);
+      return images
+        .map((image) => {
+          if (typeof image === 'string') {
+            return image.startsWith('http')
+              ? image
+              : `${process.env.MANAGER_URL}${image}`;
+          }
+          return image?.url ? `${process.env.MANAGER_URL}${image.url}` : null;
+        })
+        .filter(Boolean);
     },
   },
 
   Query: {
-    communities: async (_, { filters, sort, pagination, search }, { dataSources }) => {
+    communities: async (
+      _,
+      { filters, sort, pagination, search },
+      { dataSources },
+    ) => {
       try {
-        const response = await dataSources.manager.findCommunities(filters, sort, pagination, search);
+        const response = await dataSources.manager.findCommunities(
+          filters,
+          sort,
+          pagination,
+          search,
+        );
         return response;
       } catch (err) {
         throw new Error(`Error fetching communities: ${err.message}`);
@@ -37,4 +50,4 @@ const Community = {
   },
 };
 
-export default Community; 
+export default Community;

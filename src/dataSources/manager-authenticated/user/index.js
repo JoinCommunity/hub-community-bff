@@ -10,9 +10,13 @@ const me = async ({ headers, userId }) => {
     return cachedUser;
   }
 
-  const response = await fetch('/users/me', 'GET', headers);
-  cachedMe.set(userId, response);
-  return response;
+  try {
+    const response = await fetch('/users/me', 'GET', headers);
+    cachedMe.set(userId, response);
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const user = ({ headers }) => ({
