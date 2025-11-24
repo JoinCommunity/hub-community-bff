@@ -15,6 +15,7 @@ type Event {
   createdAt: String
   updatedAt: String
   documentId: String
+  subscription_link: String
 }
 
 type Query {
